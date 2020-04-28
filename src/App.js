@@ -20,7 +20,6 @@ class App extends Component {
   }
 
   increase = () => {
-    alert()
     if (this.state.index < 230) {
       this.setState({index: this.state.index + 20})
     }
@@ -34,7 +33,6 @@ class App extends Component {
 
   render() {
     const { index, density } = this.state;
-    console.log(index)
     return (
       <div>
         <div>
