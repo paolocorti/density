@@ -7,9 +7,6 @@ import {
   forceCollide
 } from "d3-force";
 import { scaleSqrt, scaleLinear } from "d3-scale";
-import { csv } from "d3-fetch";
-import ReactTooltip from "react-tooltip";
-import dataDensity from './density.csv';
 
 const width = 200;
 const height = 200;
@@ -31,32 +28,50 @@ const pythag = (r, b, coord) => {
 }
 
 const rScale = scaleLinear()
-.domain([0, 1000])
-.range([15, 0])
+.domain([0, 800])
+.range([14, 2])
 
 class PackViz extends Component {
   state = {
     nodes: [],
     activeState: null,
+    countryName: null,
+    index: null
   };
 
   simulation = null;
 
   componentDidMount() {
 
-    csv(dataDensity).then(density => {
-      this.setState({ dd: density})
+    const {index, densityNumber, countryName} = this.props;
 
-      const densityNumber = parseInt(density[20].density_dots);
+    this.setState({ countryName: countryName, index: index})
+    const dataPlain = [...Array(densityNumber).keys()];
+    const dataObject = dataPlain.map((d) => {return {name: 'name', d: 1}})
+    
+    this.setUpForceLayout(
+      dataObject,
+      width,
+      height,
+      densityNumber
+    );
+  }
+
+  componentDidUpdate() {
+
+    const {index, densityNumber, countryName} = this.props;
+
+    if (index !== this.state.index) {
+      this.setState({ countryName: countryName, index: index})
       const dataPlain = [...Array(densityNumber).keys()];
       const dataObject = dataPlain.map((d) => {return {name: 'name', d: 1}})
-    
       this.setUpForceLayout(
         dataObject,
-          width,
-          height
+        width,
+        height,
+        densityNumber
       );
-    });
+    }
   }
 
   componentWillUnmount() {
@@ -66,8 +81,8 @@ class PackViz extends Component {
     }
   }
 
-  setUpForceLayout = (res, width, height) => {
-    console.log(res)
+  setUpForceLayout = (res, width, height, densityNumber) => {
+    console.log('densityNumber', densityNumber)
     //const [min, max] = extent(res, d => d.d);
 
     const simulationNodes = res
@@ -77,13 +92,13 @@ class PackViz extends Component {
       });
 
     this.simulation = forceSimulation(simulationNodes)
-      .force("charge", forceManyBody().strength(8))
+      .force("charge", forceManyBody().strength(5))
       .force("center", forceCenter(width / 2, height / 2))
       .force(
         "collision",
         forceCollide()
-          .radius(n => n.radius + rScale(n.d))
-          .strength(1)
+          .radius(n => n.radius + (this.props.extR || rScale(densityNumber)) )
+          .strength(2)
           .iterations(2)
       )
       .on("tick", a => {
@@ -101,32 +116,35 @@ class PackViz extends Component {
   };
 
   render() {
-    const { nodes, activeIndex } = this.state;
-    const { selectChemical, selected } = this.props;
+    const { nodes, countryName } = this.state;
+    const { selectChemical } = this.props;
     return (
-      <svg width={width} height={height}>
-        <circle cx={width / 2} cy={height / 2} r={width / 2} stroke="black" strokeWidth={1} fill='none' />
-        {nodes
-          .filter(d => d.d > 0)
-          .map((node, index) => {
-            return (
-              <g key={index}>
-                <circle
-                  ref={node.name}
-                  cx={node.x}
-                  cy={node.y}
-                  className={`circle`}
-                  stroke="black"
-                  fill='black'
-                  strokeWidth={1}
-                  r={1}
-                  onClick={() => selectChemical("chemical", node.name)}
-                  style={{ cursor: "pointer" }}
-                />
-              </g>
-            );
-          })}
-      </svg>
+      <div style={{ width: '20%', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <svg width={width} height={height}>
+          <circle cx={width / 2} cy={height / 2} r={width / 2} stroke="black" strokeWidth={1} fill='none' />
+          {nodes
+            .filter(d => d.d > 0)
+            .map((node, index) => {
+              return (
+                <g key={index}>
+                  <circle
+                    ref={node.name}
+                    cx={node.x}
+                    cy={node.y}
+                    className={`circle`}
+                    stroke="black"
+                    fill='black'
+                    strokeWidth={1}
+                    r={1}
+                    onClick={() => selectChemical("chemical", node.name)}
+                    style={{ cursor: "pointer" }}
+                  />
+                </g>
+              );
+            })}
+        </svg>
+        { countryName } - {`${(this.props.extR || rScale(this.props.densityNumber).toFixed(2) )}`}
+      </div>
     );
   }
 }
