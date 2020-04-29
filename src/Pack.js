@@ -28,7 +28,7 @@ const pythag = (r, b, coord) => {
 }
 
 const rScale = scaleLinear()
-.domain([0, 800])
+.domain([0, 1600])
 .range([14, 2])
 
 class PackViz extends Component {

@@ -44,6 +44,7 @@ class App extends Component {
             density.length > 0 &&
             (
               <Fragment>
+                <Pack index={index + 0} densityNumber={parseInt(density[index + 0].density_dots)} countryName={density[index + 0].country}/>
                 <Pack index={index + 1} densityNumber={parseInt(density[index + 1].density_dots)} countryName={density[index + 1].country}/>
                 <Pack index={index + 2} densityNumber={parseInt(density[index + 2].density_dots)} countryName={density[index + 2].country}/>
                 <Pack index={index + 3} densityNumber={parseInt(density[index + 3].density_dots)} countryName={density[index + 3].country}/>
@@ -63,7 +64,7 @@ class App extends Component {
                 <Pack index={index + 17} densityNumber={parseInt(density[index + 17].density_dots)} countryName={density[index + 17].country}/>
                 <Pack index={index + 18} densityNumber={parseInt(density[index + 18].density_dots)} countryName={density[index+ 18].country}/>
                 <Pack index={index + 19} densityNumber={parseInt(density[index + 19].density_dots)} countryName={density[index + 19].country}/>
-                <Pack index={index + 20} densityNumber={parseInt(density[index + 20].density_dots)} countryName={density[index + 20].country}/>
+                {/* <Pack index={index + 20} densityNumber={parseInt(density[index + 20].density_dots)} countryName={density[index + 20].country}/> */}
               </Fragment>
             )
           }
