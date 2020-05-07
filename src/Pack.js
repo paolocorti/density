@@ -28,7 +28,7 @@ const pythag = (r, b, coord) => {
 }
 
 const rScale = scaleLinear()
-.domain([0, 1600])
+.domain([0, 2100])
 .range([14, 2])
 
 class PackViz extends Component {
@@ -44,6 +44,8 @@ class PackViz extends Component {
   componentDidMount() {
 
     const {index, densityNumber, countryName} = this.props;
+
+    console.log(densityNumber)
 
     this.setState({ countryName: countryName, index: index})
     const dataPlain = [...Array(densityNumber).keys()];
@@ -143,7 +145,7 @@ class PackViz extends Component {
               );
             })}
         </svg>
-        { countryName } - {`${(this.props.extR || rScale(this.props.densityNumber).toFixed(2) )}`}
+        { countryName } - {`${(this.props.extR || rScale(this.props.densityNumber) )}`}
       </div>
     );
   }

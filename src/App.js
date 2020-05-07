@@ -4,7 +4,7 @@ import './App.css';
 import Pack from './Pack';
 import { render } from 'react-dom';
 import { csv } from "d3-fetch";
-import dataDensity from './density.csv';
+import dataDensity from './density3.csv';
 
 class App extends Component {
 
@@ -33,6 +33,8 @@ class App extends Component {
 
   render() {
     const { index, density } = this.state;
+
+    console.log(density)
     return (
       <div>
         <div>
